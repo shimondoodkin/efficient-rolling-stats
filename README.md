@@ -91,7 +91,7 @@ rolling/running statistics in javascript
  `stats` has: 
  * `stats.reset()`
 
-    .
+    
  
 ```
     var Stats=require('efficient-rolling-stats');
