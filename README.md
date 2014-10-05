@@ -169,7 +169,7 @@ rolling/running statistics in javascript
 
 #### AllStats(WindowSize,Delay,TimeWindowSize,UsualTimeSkip,TimeDelay)
 
- this example compains many possibilities
+ this example contains many possibilities
 
  returns ```stats(number,index){ return result_object }```
 
