@@ -39,9 +39,17 @@ rolling/running statistics in javascript
  
  the index argument can be not continious like time in seconds or miliseconds
 
-#### RollingxAvgPerIndex(WindowSize,UsualIndexSkipBetweenOccations)
+ 
+#### RollingAvgIndex(WindowSize)
 
- this function is calculates average rate.
+ returns `function atEveryStep(number,index){ return result }`
+ 
+ the index argument can be not continious like time in seconds or miliseconds
+
+#### RollingSumPerIndex(WindowSize,UsualIndexSkipBetweenOccations)
+
+ this function is calculates average rate: Sum/(LastIndex-FirstIndex)
+ like in stocks total volume per minute in the last minute
  
  if index is in miliseconds and you average frame size than it calculates rolling frames per millisecond
  input index can be a float number in terms of seconds to have frames per second
@@ -93,7 +101,8 @@ rolling/running statistics in javascript
  * `stats.reset()`
 
     
- 
+function source:
+
 ```
     var Stats=require('efficient-rolling-stats');
     function SimpleStats(size,delay)
@@ -139,6 +148,7 @@ rolling/running statistics in javascript
 
  returns ```stats(number){ return result_object }```
 
+function source:
 
         var Stats=require('efficient-rolling-stats');
         function SimpleStatsNoDelay(size)
@@ -173,73 +183,87 @@ rolling/running statistics in javascript
 
  returns ```stats(number,index){ return result_object }```
 
+ function source:
+ 
+    var Stats=require('efficient-rolling-stats');
+	function AllStats(size,delay,timesize,usualtime,timedelay)
+	{
+		var min=Stats.RollingMin(size)
+	   ,max=Stats.RollingMax(size)
+	   ,avg=Stats.RollingAvg(size)
+	   ,avgtime=Stats.RollingAvg(size)
+	   ,stdev=Stats.RollingAvg(size)
+	   ,zavg=Stats.RollingAvg(size)
+	   ,tmin=vRollingMinIndex(timesize)
+	   ,tmax=Stats.RollingMaxIndex(timesize)
+	   ,tavg=Stats.RollingAvgIndex(timesize)
+	   ,tzavg=Stats.RollingAvgIndex(timesize)
+	   ,tstdev=Stats.RollingAvgIndex(timesize)
+	   ,tsum=Stats.RollingSumPerIndex(timesize,usualtime)// once in two seconds a value
+	   ,value_delay=Stats.Delay(delay) // because i can't move the indicators forewared but i can move the number backwards so it will match with the lagging indicators
+	   ,tvalue_delay=Stats.DelayIndex(timedelay,usualtime)
+	   ,index_delay=Stats.Delay(delay) // add the coresponding index to the delaied value, the other option is not to dalay anything and offset it the presentation
+	   ,tindex_delay=Stats.DelayIndex(timedelay,usualtime)
+	   ,prev=false
+	   ,count=0
+	   ,tcount=0;
+	   
+		function stats(n,t)
+		{
+		 var o={}
+		 
 
-        var Stats=require('efficient-rolling-stats');
-        function AllStats(size,delay,timesize,usualtime,timedelay)
-        {
-            var min=Stats.RollingMin(size)
-           ,max=Stats.RollingMax(size)
-           ,avg=Stats.RollingAvg(size)
-           ,avgtime=Stats.RollingAvg(size)
-           ,tmin=Stats.RollingMinIndex(size)
-           ,tmax=Stats.RollingMaxIndex(size)
-           ,wavg=Stats.RollingxAvgPerIndex(timesize,usualtime)// once in two seconds a value
-           ,min_delay=Stats.Delay(delay)
-           ,max_delay=Stats.Delay(delay)
-           ,avg_delay=Stats.Delay(delay)
-           ,avgtime_delay=Stats.Delay(delay)
-           ,tmin_delay=Stats.Delay(delay)
-           ,tmax_delay=Stats.Delay(delay)
-           ,wavg_delay=Stats.DelayIndex(timedelay,usualtime)
-           
-           var prev=false;
-            
-            function stats(n,t)
-            {
-             var o={}
-             
-             o.min=min(n)
-             o.max=max(n)
-             o.avg=avg(n)
-             
-             o.tmin=tmin(n)
-             o.tmax=tmax(n)
-             o.wavg=wavg(n,t)
-             
-             if(prev===false) var prev=t-usualtime
-             var delta=t-prev;
-             o.avgtime=avgtime(delta)
-             
-             o.min_delay=min_delay(o.min)
-             o.max_delay=max_delay(o.max)
-             o.avg_delay=avg_delay(o.avg)
-             o.avgtime_delay=avgtime_delay(o.avgtime)
-             
-             o.tmin_delay=tmin_delay(o.tmin)
-             o.tmax_delay=tmax_delay(o.tmax)
-             o.wavg_delay=wavg_delay(o.wavg)
-               
-             return o;
-            }
-            stats.reset=function()
-            {
-             min.reset();
-             max.reset();
-             avg.reset();
-             avgtime.reset();
-             tmin.reset();
-             tmax.reset();
-             wavg.reset();
-             min_delay.reset();
-             max_delay.reset();
-             avg_delay.reset();
-             avgtime_delay.reset();
-             tmin_delay.reset();
-             tmax_delay.reset();
-             wavg_delay.reset();
-            }
-            return stats;
-        }
+		 o.min=min(n)
+		 o.max=max(n)
+		 o.avg=avg(n)
+		 
+		 o.stdev=Math.sqrt(stdev(Math.pow(n-o.avg,2)))
+		 o.z=o.stdev==0?0:(n-o.avg)/o.stdev
+		 o.zavg=zavg(o.z)
+		 
+		 o.tmin=tmin(n,t)
+		 o.tmax=tmax(n,t)
+		 o.tavg=tavg(n,t)
+		 o.tsum=tsum(n,t)
+		 o.tstdev=Math.sqrt(tstdev(Math.pow(n-o.tavg,2),t))
+		 o.tz=o.tstdev==0?0:(n-o.tavg)/o.tstdev
+		 o.tzavg=tzavg(o.tz,t)
+		 
+		 if(prev===false) prev=t-usualtime;     var delta=t-prev; prev=t;     o.avgtime=avgtime(delta) // to have result in minutes
+		 
+		 o.count=count;count++;// it is good ide to have count to skip the initial
+		 o.tcount=tcount;tcount+=delta;
+		 
+		 o.value_delay=value_delay(n);
+		 o.tvalue_delay=tvalue_delay(n,t);
+		 o.index_delay=index_delay(t);
+		 o.tindex_delay=tindex_delay(t,t);
+		   
+		 return o;
+		}
+		stats.reset=function()
+		{ // copy paste list from above regexp replace: search "=.+" replace with: ".reset\(\)" , replace the "," with "  " - 2 spaces.
+		 min.reset()
+		 max.reset()
+		 avg.reset()
+		 avgtime.reset()
+		 stdev.reset()
+		 zavg.reset()
+		 tmin.reset()
+		 tmax.reset()
+		 tavg.reset()
+		 tzavg.reset()
+		 tstdev.reset()
+		 tsum.reset()
+		 value_delay.reset()
+		 tvalue_delay.reset()
+		 index_delay.reset()
+		 tindex_delay.reset()
+		 prev=false;
+		 count=0;
+		}
+		return stats;
+	}
 
 
 
@@ -247,8 +271,14 @@ rolling/running statistics in javascript
 
         var Stats=require('efficient-rolling-stats');
         
+		// sample 101 points and delay them by 50 points 
+		// sample for 15 minutes and usually the input is every 15 seconds so the first input will be more or less not outlier,delay the timed input by 7.5 minutes
         var stats=Stats.AllStats(101,50,15*60000,0.25*60000,7.5*60000)
         stats(Math.random()*100,new Date().getTime())
+		stats(Math.random()*100,new Date().getTime())
+		stats(Math.random()*100,new Date().getTime())
+		stats(Math.random()*100,new Date().getTime())
+		stats.reset();
         
         simple examples:
          

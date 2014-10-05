@@ -19,7 +19,7 @@ This is the algorithm from http://stackoverflow.com/a/12195098/466363:
           Deque.AddTail(CurrentValue, CurrentIndex); 
           CurrentMin = Deque.Head.Value
           //Head value is minimum in the current window
-		  
+          
   
 */
 // https://gist.github.com/shimondoodkin/f274d6e17c66a8b72779
@@ -160,7 +160,32 @@ function RollingMaxIndex(WindowSize)// generator
     return atEveryStepDo;
 }
 
-function RollingxAvgPerIndex(WindowSize,UsualIndexSkipBetweenOccations)// generator
+function RollingAvgIndex(WindowSize)// generator
+{
+    var DequeIndex=[],DequeValue=[],T=WindowSize,Sum=0;
+    function atEveryStepDo(CurrentValue,CurrentIndex)
+    {
+      while ( DequeIndex.length!==0 && (DequeIndex[0] <= CurrentIndex - T) && DequeIndex[0]!=CurrentIndex)  // do not remove current index so you will be able to make an avarage to not devide by zero, because current-current =zero assumes raising order in the index and window size of at last two
+      {
+         DequeIndex.shift();
+         Sum-=DequeValue.shift();
+      }
+      
+      //Head is too old, it is leaving the window
+      
+      DequeIndex.push(CurrentIndex); 
+      DequeValue.push(CurrentValue); 
+
+      Sum+=CurrentValue;
+
+      return Sum/DequeValue.length //Head value is minimum in the current window
+    }
+    atEveryStepDo.setWindowSize=function(WindowSize){T=WindowSize};
+    atEveryStepDo.reset=function(WindowSize){DequeIndex.splice(0,DequeIndex.length);DequeValue.splice(0,DequeValue.length);Sum=0;};
+    return atEveryStepDo;
+}
+
+function RollingSumPerIndex(WindowSize,UsualIndexSkipBetweenOccations)// generator
 {
     var DequeIndex=[],DequeValue=[],T=WindowSize,Sum=0,PrevIndex=false,U=UsualIndexSkipBetweenOccations;
     function atEveryStepDo(CurrentValue,CurrentIndex)
@@ -207,9 +232,9 @@ function Delay(WindowSize,UndefinedValue)
     return atEveryStepDo;
 }
 
-function DelayIndex(WindowSize,UsualIndexSkipBetweenOccations)// generator, expects some high frequency of time inserts because if there will be a delay or no inserts it will stop working;
+function DelayIndex(WindowSize,UsualIndexSkipBetweenOccations,UndefinedValue)// generator, expects some high frequency of time inserts because if there will be a delay or no inserts it will stop working;
 {
-    var DequeIndex=[],DequeValue=[],T=WindowSize,PrevIndex=false,U=UsualIndexSkipBetweenOccations;
+    var DequeIndex=[],DequeValue=[],T=WindowSize,PrevIndex=false,PrevValue=UndefinedValue,U=UsualIndexSkipBetweenOccations;
     function atEveryStepDo(CurrentValue,CurrentIndex)
     {
       DequeIndex.push(CurrentIndex); 
@@ -225,74 +250,95 @@ function DelayIndex(WindowSize,UsualIndexSkipBetweenOccations)// generator, expe
     }
     atEveryStepDo.setWindowSize=function(WindowSize){T=WindowSize};
     atEveryStepDo.setUsualIndexSkipBetweenOccations=function(UsualIndexSkipBetweenOccations){U=UsualIndexSkipBetweenOccations};
-    atEveryStepDo.reset=function(WindowSize){DequeIndex.splice(0,DequeIndex.length);DequeValue.splice(0,DequeValue.length);PrevIndex=false;};
+    atEveryStepDo.reset=function(WindowSize){DequeIndex.splice(0,DequeIndex.length);DequeValue.splice(0,DequeValue.length);PrevIndex=false;PrevValue=UndefinedValue};
     return atEveryStepDo;
 }
 
 //example1: // you can compose all sorts of functions like this, this is a simple one
-
+/*
+var Stats=require('efficient-rolling-stats');
+//useful: 
+// var stats=Stats.AllStats(101,50,15,0.25,7.5) // sample for 15 minutes and usually the input is every 15 seconds so the first input will be more or less not outlier,delay the timed input by 7.5 minutes
+//for testing:
+var stats=Stats.AllStats(11,5,1,0.25,0.5) // sample for 15 minutes and usually the input is every 15 seconds so the first input will be more or less not outlier,delay the timed input by 7.5 minutes
+setInterval(function(){stats(Math.random()*100,new Date().getTime()/60000)},1500) // input in minutes,  than also the configuratin arguments can be in minutes
+stats(Math.random()*100,new Date().getTime()/60000)
+*/    
 function AllStats(size,delay,timesize,usualtime,timedelay)
 {
     var min=RollingMin(size)
    ,max=RollingMax(size)
    ,avg=RollingAvg(size)
    ,avgtime=RollingAvg(size)
-   ,tmin=RollingMinIndex(size)
-   ,tmax=RollingMaxIndex(size)
-   ,wavg=RollingxAvgPerIndex(timesize,usualtime)// once in two seconds a value
-   ,min_delay=Delay(delay)
-   ,max_delay=Delay(delay)
-   ,avg_delay=Delay(delay)
-   ,avgtime_delay=Delay(delay)
-   ,tmin_delay=Delay(delay)
-   ,tmax_delay=Delay(delay)
-   ,wavg_delay=DelayIndex(timedelay,usualtime)
+   ,stdev=RollingAvg(size)
+   ,zavg=RollingAvg(size)
+   ,tmin=RollingMinIndex(timesize)
+   ,tmax=RollingMaxIndex(timesize)
+   ,tavg=RollingAvgIndex(timesize)
+   ,tzavg=RollingAvgIndex(timesize)
+   ,tstdev=RollingAvgIndex(timesize)
+   ,tsum=RollingSumPerIndex(timesize,usualtime)// once in two seconds a value
+   ,value_delay=Delay(delay) // because i can't move the indicators forewared but i can move the number backwards so it will match with the lagging indicators
+   ,tvalue_delay=DelayIndex(timedelay,usualtime)
+   ,index_delay=Delay(delay) // add the coresponding index to the delaied value, the other option is not to dalay anything and offset it the presentation
+   ,tindex_delay=DelayIndex(timedelay,usualtime)
+   ,prev=false
+   ,count=0
+   ,tcount=0;
    
-   var prev=false;
-
     function stats(n,t)
     {
      var o={}
      
+
      o.min=min(n)
      o.max=max(n)
      o.avg=avg(n)
      
-     o.tmin=tmin(n)
-     o.tmax=tmax(n)
-     o.wavg=wavg(n,t)
+     o.stdev=Math.sqrt(stdev(Math.pow(n-o.avg,2)))
+     o.z=o.stdev==0?0:(n-o.avg)/o.stdev
+     o.zavg=zavg(o.z)
      
-     if(prev===false) var prev=t-usualtime
-     var delta=t-prev;
-     o.avgtime=avgtime(delta)
+     o.tmin=tmin(n,t)
+     o.tmax=tmax(n,t)
+     o.tavg=tavg(n,t)
+     o.tsum=tsum(n,t)
+     o.tstdev=Math.sqrt(tstdev(Math.pow(n-o.tavg,2),t))
+     o.tz=o.tstdev==0?0:(n-o.tavg)/o.tstdev
+     o.tzavg=tzavg(o.tz,t)
      
-     o.min_delay=min_delay(o.min)
-     o.max_delay=max_delay(o.max)
-     o.avg_delay=avg_delay(o.avg)
-     o.avgtime_delay=avgtime_delay(o.avgtime)
-
-     o.tmin_delay=tmin_delay(o.tmin)
-     o.tmax_delay=tmax_delay(o.tmax)
-     o.wavg_delay=wavg_delay(o.wavg)
+     if(prev===false) prev=t-usualtime;     var delta=t-prev; prev=t;     o.avgtime=avgtime(delta) // to have result in minutes
+	 
+	 o.count=count;count++;// it is good ide to have count to skip the initial
+	 o.tcount=tcount;tcount+=delta;
+	 
+     o.value_delay=value_delay(n);
+     o.tvalue_delay=tvalue_delay(n,t);
+     o.index_delay=index_delay(t);
+     o.tindex_delay=tindex_delay(t,t);
        
      return o;
     }
     stats.reset=function()
-    {
-     min.reset();
-     max.reset();
-     avg.reset();
-     avgtime.reset();
-     tmin.reset();
-     tmax.reset();
-     wavg.reset();
-     min_delay.reset();
-     max_delay.reset();
-     avg_delay.reset();
-     avgtime_delay.reset();
-     tmin_delay.reset();
-     tmax_delay.reset();
-     wavg_delay.reset();
+    { // copy paste list from above regexp replace: search "=.+" replace with: ".reset\(\)" , replace the "," with "  " - 2 spaces.
+     min.reset()
+     max.reset()
+     avg.reset()
+     avgtime.reset()
+     stdev.reset()
+     zavg.reset()
+     tmin.reset()
+     tmax.reset()
+     tavg.reset()
+     tzavg.reset()
+     tstdev.reset()
+     tsum.reset()
+     value_delay.reset()
+     tvalue_delay.reset()
+	 index_delay.reset()
+     tindex_delay.reset()
+     prev=false;
+	 count=0;
     }
     return stats;
 }
@@ -362,14 +408,15 @@ function SimpleStatsNoDelay(size)
     return stats;
 }
 
-module.RollingMin=RollingMin;
-module.RollingMax=RollingMax;
-module.RollingAvg=RollingAvg;
-module.RollingMinIndex=RollingMinIndex;
-module.RollingMaxIndex=RollingMaxIndex;
-module.RollingxAvgPerIndex=RollingxAvgPerIndex;
-module.Delay=Delay;
-module.DelayIndex=DelayIndex;
-module.AllStats=AllStats;
-module.SimpleStats=SimpleStats;
-module.SimpleStatsNoDelay=SimpleStatsNoDelay;
+exports.RollingMin=RollingMin;
+exports.RollingMax=RollingMax;
+exports.RollingAvg=RollingAvg;
+exports.RollingMinIndex=RollingMinIndex;
+exports.RollingMaxIndex=RollingMaxIndex;
+exports.RollingAvgIndex=RollingAvgIndex;
+exports.RollingSumPerIndex=RollingSumPerIndex;
+exports.Delay=Delay;
+exports.DelayIndex=DelayIndex;
+exports.AllStats=AllStats;
+exports.SimpleStats=SimpleStats;
+exports.SimpleStatsNoDelay=SimpleStatsNoDelay;
