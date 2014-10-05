@@ -6,22 +6,6 @@ rolling/running statistics in javascript
     npm install efficient-rolling-stats 
 
 
-This is the algorithm from http://stackoverflow.com/a/12195098/466363:
-
-        at every step:
-
-          if (!Deque.Empty) and (Deque.Head.Index <= CurrentIndex - T) then 
-             Deque.ExtractHead;
-          //Head is too old, it is leaving the window
-
-          while (!Deque.Empty) and (Deque.Tail.Value > CurrentValue) do
-             Deque.ExtractTail;
-          //remove elements that have no chance to become minimum in the window
-
-          Deque.AddTail(CurrentValue, CurrentIndex); 
-          CurrentMin = Deque.Head.Value
-          //Head value is minimum in the current window
-
 #### RollingMin(WindowSize)
 
  returns `function atEveryStep(number){ return result }`
