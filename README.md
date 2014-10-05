@@ -5,7 +5,7 @@ rolling/running statistics in javascript
 
     npm install efficient-rolling-stats 
 
-### RollingMin(WindowSize)
+#### RollingMin(WindowSize)
 
  returns ```function atEveryStep(number){ return result }```
  
@@ -15,15 +15,15 @@ rolling/running statistics in javascript
  * ```atEveryStep.reset()```
  
 
-### RollingMax(WindowSize)
+#### RollingMax(WindowSize)
 
  returns ```function atEveryStep(number){ return result }```
  
-### RollingAvg(WindowSize)
+#### RollingAvg(WindowSize)
 
  returns ```function atEveryStep(number){ return result }```
  
-### RollingMinIndex(WindowSize)
+#### RollingMinIndex(WindowSize)
 
  returns ```function atEveryStep(number,index){ return result }```
  
@@ -32,13 +32,13 @@ rolling/running statistics in javascript
  or it can be 1 for increasing by 1 integers.
  index expected to be an increasing number.
 
-### RollingMaxIndex(WindowSize)
+#### RollingMaxIndex(WindowSize)
 
  returns ```function atEveryStep(number,index){ return result }```
  
  the index argument can be not continious like time in seconds or miliseconds
 
-### RollingxAvgPerIndex(WindowSize,UsualIndexSkipBetweenOccations)
+#### RollingxAvgPerIndex(WindowSize,UsualIndexSkipBetweenOccations)
 
  this function is calculates average rate.
  
@@ -59,13 +59,13 @@ rolling/running statistics in javascript
  
  * ```atEveryStep.setUsualIndexSkipBetweenOccations(UsualIndexSkipBetweenOccations)```
 
-### Delay(WindowSize)
+#### Delay(WindowSize)
 
  this function delayes the input by window size
 
  returns ```function atEveryStep(number){ return result }```
  
-### DelayIndex(WindowSize,UsualIndexSkipBetweenOccations)
+#### DelayIndex(WindowSize,UsualIndexSkipBetweenOccations)
 
  this function delayes the input by window size, using index
  this function is similar to ```RollingxAvgPerIndex``` function
@@ -79,9 +79,9 @@ rolling/running statistics in javascript
  
  * ```atEveryStep.setUsualIndexSkipBetweenOccations(UsualIndexSkipBetweenOccations)```
 
-#### Examples
+### Example functions in Code
 
-### SimpleStats(WindowSize,Delay)
+#### SimpleStats(WindowSize,Delay)
 
   this is a simple example function of how to combine multiple stats together with delays
   denerally you should write such function for your self to choose which stats you want
@@ -91,13 +91,13 @@ rolling/running statistics in javascript
  ```stats``` has 
   * ```stats.reset()```
   
-### SimpleStatsNoDelay(WindowSize)
+#### SimpleStatsNoDelay(WindowSize)
 
   anoher simple example function combines multiple stats together without delays
 
  returns ```stats(number){ return result }```
  
-### AllStats(WindowSize,Delay,TimeWindowSize,UsualTimeSkip,TimeDelay)
+#### AllStats(WindowSize,Delay,TimeWindowSize,UsualTimeSkip,TimeDelay)
 
   this example compains many possibilities
 
