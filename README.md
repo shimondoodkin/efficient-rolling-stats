@@ -7,25 +7,25 @@ rolling/running statistics in javascript
 
 #### RollingMin(WindowSize)
 
- returns ```function atEveryStep(number){ return result }```
+ returns `function atEveryStep(number){ return result }`
  
  atEveryStep usualy has:
  
- * ```atEveryStep.setWindowSize(WindowSize)```
- * ```atEveryStep.reset()```
+ * `atEveryStep.setWindowSize(WindowSize)`
+ * `atEveryStep.reset()`
  
 
 #### RollingMax(WindowSize)
 
- returns ```function atEveryStep(number){ return result }```
+ returns `function atEveryStep(number){ return result }`
  
 #### RollingAvg(WindowSize)
 
- returns ```function atEveryStep(number){ return result }```
+ returns `function atEveryStep(number){ return result }`
  
 #### RollingMinIndex(WindowSize)
 
- returns ```function atEveryStep(number,index){ return result }```
+ returns `function atEveryStep(number,index){ return result }`
  
  the index argument can be not continious like time in seconds or miliseconds
  to have minimum of last 5 minutes for example,
@@ -34,7 +34,7 @@ rolling/running statistics in javascript
 
 #### RollingMaxIndex(WindowSize)
 
- returns ```function atEveryStep(number,index){ return result }```
+ returns `function atEveryStep(number,index){ return result }`
  
  the index argument can be not continious like time in seconds or miliseconds
 
@@ -51,33 +51,33 @@ rolling/running statistics in javascript
  the input should be quite timely otherwise the result is delayed too much i think. 
  maybe functions like this should be bound to a clock and work with event emiter. but i implemented it anyways.
  
- returns ```function atEveryStep(number,index){ return result }```
+ returns `function atEveryStep(number,index){ return result }`
  
  the index argument can be not continious like time in seconds or miliseconds
  
  also atEveryStep has:
  
- * ```atEveryStep.setUsualIndexSkipBetweenOccations(UsualIndexSkipBetweenOccations)```
+ * `atEveryStep.setUsualIndexSkipBetweenOccations(UsualIndexSkipBetweenOccations)`
 
 #### Delay(WindowSize)
 
  this function delayes the input by window size
 
- returns ```function atEveryStep(number){ return result }```
+ returns `function atEveryStep(number){ return result }`
  
 #### DelayIndex(WindowSize,UsualIndexSkipBetweenOccations)
 
  this function delayes the input by window size, using index
- this function is similar to ```RollingxAvgPerIndex``` function
+ this function is similar to `RollingxAvgPerIndex` function
  the input should be quite timely otherwise the result is delayed too much i think.
  
- returns ```function atEveryStep(number,index){ return result }```
+ returns `function atEveryStep(number,index){ return result }`
  
  the index argument can be not continious like time in seconds or miliseconds
  
  also atEveryStep has:
  
- * ```atEveryStep.setUsualIndexSkipBetweenOccations(UsualIndexSkipBetweenOccations)```
+ * `atEveryStep.setUsualIndexSkipBetweenOccations(UsualIndexSkipBetweenOccations)` 
 
 ### Example functions in Code
 
@@ -86,50 +86,48 @@ rolling/running statistics in javascript
  this is a simple example function of how to combine multiple stats together with delays
  denerally you should write such function for your self to choose which stats you want
 
- returns ```stats(number){ return result_object }```
+ returns `stats(number){ return result_object }` 
  
- ```stats``` has 
- * ```stats.reset()```
- 
- example:
+ `stats` has 
+      * `stats.reset()`
 
-        var Stats=require('efficient-rolling-stats');
-        function SimpleStats(size,delay)
-        {
-            var min=Stats.RollingMin(size)
-           ,max=Stats.RollingMax(size)
-           ,avg=Stats.RollingAvg(size)
-           ,min_delay=Stats.Delay(delay)
-           ,max_delay=Stats.Delay(delay)
-           ,avg_delay=Stats.Delay(delay)
+	var Stats=require('efficient-rolling-stats');
+	function SimpleStats(size,delay)
+	{
+		var min=Stats.RollingMin(size)
+	   ,max=Stats.RollingMax(size)
+	   ,avg=Stats.RollingAvg(size)
+	   ,min_delay=Stats.Delay(delay)
+	   ,max_delay=Stats.Delay(delay)
+	   ,avg_delay=Stats.Delay(delay)
 
-            function stats(n)
-            {
-             var o={}
-             
-             o.min=min(n)
-             o.max=max(n)
-             o.avg=avg(n)
-             
-             o.min_delay=min_delay(o.min)
-             o.max_delay=max_delay(o.max)
-             o.avg_delay=avg_delay(o.avg)
-               
-             return o;
-            }
-            
-            stats.reset=function()
-            {
-             min.reset();
-             max.reset();
-             avg.reset();
-             min_delay.reset();
-             max_delay.reset();
-             avg_delay.reset();
-            }
-            return stats;
-        }
-      
+		function stats(n)
+		{
+		 var o={}
+		 
+		 o.min=min(n)
+		 o.max=max(n)
+		 o.avg=avg(n)
+		 
+		 o.min_delay=min_delay(o.min)
+		 o.max_delay=max_delay(o.max)
+		 o.avg_delay=avg_delay(o.avg)
+		   
+		 return o;
+		}
+		
+		stats.reset=function()
+		{
+		 min.reset();
+		 max.reset();
+		 avg.reset();
+		 min_delay.reset();
+		 max_delay.reset();
+		 avg_delay.reset();
+		}
+		return stats;
+	}
+
 #### SimpleStatsNoDelay(WindowSize)
 
  anoher simple example function combines multiple stats together without delays
