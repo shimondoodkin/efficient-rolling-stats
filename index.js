@@ -2,7 +2,26 @@ if(require.main === module) { var  repl = require("repl");repl.start({ useGlobal
 
 
 //rolling min max in probably fast javascript, if you treat javascript as c it is fast as c, i.e. no object arrays
-// from http://stackoverflow.com/a/12195098/466363
+/*
+
+This is the algorithm from http://stackoverflow.com/a/12195098/466363:
+
+        at every step:
+
+          if (!Deque.Empty) and (Deque.Head.Index <= CurrentIndex - T) then 
+             Deque.ExtractHead;
+          //Head is too old, it is leaving the window
+
+          while (!Deque.Empty) and (Deque.Tail.Value > CurrentValue) do
+             Deque.ExtractTail;
+          //remove elements that have no chance to become minimum in the window
+
+          Deque.AddTail(CurrentValue, CurrentIndex); 
+          CurrentMin = Deque.Head.Value
+          //Head value is minimum in the current window
+		  
+  
+*/
 // https://gist.github.com/shimondoodkin/f274d6e17c66a8b72779
  
 function RollingMin(WindowSize)// generator
