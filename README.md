@@ -94,7 +94,7 @@ rolling/running statistics in javascript
  
  this is a simple example function of how to combine multiple stats together with delays
  
- <u>generally you should write such function for your self to choose which stats you want</u>
+ > generally you should write such function for your self to choose which stats you want
  
  returns `stats(number){ return result_object }` 
  
