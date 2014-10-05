@@ -92,7 +92,7 @@ rolling/running statistics in javascript
  
   * stats.reset()
 
-  var Stats=require('efficient-rolling-stats');
+    var Stats=require('efficient-rolling-stats');
 	function SimpleStats(size,delay)
 	{
 		var min=Stats.RollingMin(size)
