@@ -110,9 +110,7 @@ function source:
        var min=Stats.RollingMin(size)
        ,max=Stats.RollingMax(size)
        ,avg=Stats.RollingAvg(size)
-       ,min_delay=Stats.Delay(delay)
-       ,max_delay=Stats.Delay(delay)
-       ,avg_delay=Stats.Delay(delay)
+       ,value_delay=Stats.Delay(delay)
        
        function stats(n)
        {
@@ -121,9 +119,7 @@ function source:
          o.max=max(n)
          o.avg=avg(n)
          
-         o.min_delay=min_delay(o.min)
-         o.max_delay=max_delay(o.max)
-         o.avg_delay=avg_delay(o.avg)
+         o.value_delay=value_delay(n)
          
          return o;
        }
@@ -134,9 +130,7 @@ function source:
          max.reset();
          avg.reset();
          
-         min_delay.reset();
-         max_delay.reset();
-         avg_delay.reset();
+         value_delay.reset();
        }
        return stats;
     }
@@ -271,13 +265,21 @@ function source:
 
         var Stats=require('efficient-rolling-stats');
         
+		
+		
+        var Stats=require('efficient-rolling-stats');
+		
+		//useful: 
 		// sample 101 points and delay them by 50 points 
 		// sample for 15 minutes and usually the input is every 15 seconds so the first input will be more or less not outlier,delay the timed input by 7.5 minutes
-        var stats=Stats.AllStats(101,50,15*60000,0.25*60000,7.5*60000)
-        stats(Math.random()*100,new Date().getTime())
-		stats(Math.random()*100,new Date().getTime())
-		stats(Math.random()*100,new Date().getTime())
-		stats(Math.random()*100,new Date().getTime())
+		// var stats=Stats.AllStats(101,50,15,0.25,7.5) 
+		//for testing:
+		var stats=Stats.AllStats(11,5,1,0.25,0.5) // sample for 15 minutes and usually the input is every 15 seconds so the first input will be more or less not outlier,delay the timed input by 7.5 minutes
+		
+		setInterval(function(){stats(Math.random()*100,new Date().getTime()/60000)},1500) // input in minutes,  than also the configuratin arguments can be in minutes
+		
+		stats(Math.random()*100,new Date().getTime()/60000)
+		stats(Math.random()*100,new Date().getTime()/60000)
 		stats.reset();
         
         simple examples:
