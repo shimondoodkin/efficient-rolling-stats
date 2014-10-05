@@ -92,44 +92,44 @@ rolling/running statistics in javascript
 
  * ```stats.reset()```
 
-  
-    var Stats=require('efficient-rolling-stats');
-    function SimpleStats(size,delay)
-    {
-        var min=Stats.RollingMin(size)
-       ,max=Stats.RollingMax(size)
-       ,avg=Stats.RollingAvg(size)
-       ,min_delay=Stats.Delay(delay)
-       ,max_delay=Stats.Delay(delay)
-       ,avg_delay=Stats.Delay(delay)
+      
+        var Stats=require('efficient-rolling-stats');
+        function SimpleStats(size,delay)
+        {
+            var min=Stats.RollingMin(size)
+           ,max=Stats.RollingMax(size)
+           ,avg=Stats.RollingAvg(size)
+           ,min_delay=Stats.Delay(delay)
+           ,max_delay=Stats.Delay(delay)
+           ,avg_delay=Stats.Delay(delay)
 
-        function stats(n)
-        {
-         var o={}
-         
-         o.min=min(n)
-         o.max=max(n)
-         o.avg=avg(n)
-         
-         o.min_delay=min_delay(o.min)
-         o.max_delay=max_delay(o.max)
-         o.avg_delay=avg_delay(o.avg)
-           
-         return o;
+            function stats(n)
+            {
+             var o={}
+             
+             o.min=min(n)
+             o.max=max(n)
+             o.avg=avg(n)
+             
+             o.min_delay=min_delay(o.min)
+             o.max_delay=max_delay(o.max)
+             o.avg_delay=avg_delay(o.avg)
+               
+             return o;
+            }
+            
+            stats.reset=function()
+            {
+             min.reset();
+             max.reset();
+             avg.reset();
+             min_delay.reset();
+             max_delay.reset();
+             avg_delay.reset();
+            }
+            return stats;
         }
-        
-        stats.reset=function()
-        {
-         min.reset();
-         max.reset();
-         avg.reset();
-         min_delay.reset();
-         max_delay.reset();
-         avg_delay.reset();
-        }
-        return stats;
-    }
-  
+      
 #### SimpleStatsNoDelay(WindowSize)
 
  anoher simple example function combines multiple stats together without delays
@@ -137,32 +137,32 @@ rolling/running statistics in javascript
  returns ```stats(number){ return result_object }```
 
 
-    var Stats=require('efficient-rolling-stats');
-    function SimpleStatsNoDelay(size)
-    {
-        var min=Stats.RollingMin(size)
-       ,max=Stats.RollingMax(size)
-       ,avg=Stats.RollingAvg(size)
-     
-
-        function stats(n)
+        var Stats=require('efficient-rolling-stats');
+        function SimpleStatsNoDelay(size)
         {
-         var o={}
+            var min=Stats.RollingMin(size)
+           ,max=Stats.RollingMax(size)
+           ,avg=Stats.RollingAvg(size)
          
-         o.min=min(n)
-         o.max=max(n)
-         o.avg=avg(n)
 
-         return o;
+            function stats(n)
+            {
+             var o={}
+             
+             o.min=min(n)
+             o.max=max(n)
+             o.avg=avg(n)
+
+             return o;
+            }
+            stats.reset=function()
+            {
+             min.reset();
+             max.reset();
+             avg.reset();
+            }
+            return stats;
         }
-        stats.reset=function()
-        {
-         min.reset();
-         max.reset();
-         avg.reset();
-        }
-        return stats;
-    }
 
 #### AllStats(WindowSize,Delay,TimeWindowSize,UsualTimeSkip,TimeDelay)
 
@@ -171,193 +171,193 @@ rolling/running statistics in javascript
  returns ```stats(number,index){ return result_object }```
 
 
-    var Stats=require('efficient-rolling-stats');
-    function AllStats(size,delay,timesize,usualtime,timedelay)
-    {
-        var min=Stats.RollingMin(size)
-       ,max=Stats.RollingMax(size)
-       ,avg=Stats.RollingAvg(size)
-       ,avgtime=Stats.RollingAvg(size)
-       ,tmin=Stats.RollingMinIndex(size)
-       ,tmax=Stats.RollingMaxIndex(size)
-       ,wavg=Stats.RollingxAvgPerIndex(timesize,usualtime)// once in two seconds a value
-       ,min_delay=Stats.Delay(delay)
-       ,max_delay=Stats.Delay(delay)
-       ,avg_delay=Stats.Delay(delay)
-       ,avgtime_delay=Stats.Delay(delay)
-       ,tmin_delay=Stats.Delay(delay)
-       ,tmax_delay=Stats.Delay(delay)
-       ,wavg_delay=Stats.DelayIndex(timedelay,usualtime)
-       
-       var prev=false;
-
-        function stats(n,t)
+        var Stats=require('efficient-rolling-stats');
+        function AllStats(size,delay,timesize,usualtime,timedelay)
         {
-         var o={}
-         
-         o.min=min(n)
-         o.max=max(n)
-         o.avg=avg(n)
-         
-         o.tmin=tmin(n)
-         o.tmax=tmax(n)
-         o.wavg=wavg(n,t)
-         
-         if(prev===false) var prev=t-usualtime
-         var delta=t-prev;
-         o.avgtime=avgtime(delta)
-         
-         o.min_delay=min_delay(o.min)
-         o.max_delay=max_delay(o.max)
-         o.avg_delay=avg_delay(o.avg)
-         o.avgtime_delay=avgtime_delay(o.avgtime)
-
-         o.tmin_delay=tmin_delay(o.tmin)
-         o.tmax_delay=tmax_delay(o.tmax)
-         o.wavg_delay=wavg_delay(o.wavg)
+            var min=Stats.RollingMin(size)
+           ,max=Stats.RollingMax(size)
+           ,avg=Stats.RollingAvg(size)
+           ,avgtime=Stats.RollingAvg(size)
+           ,tmin=Stats.RollingMinIndex(size)
+           ,tmax=Stats.RollingMaxIndex(size)
+           ,wavg=Stats.RollingxAvgPerIndex(timesize,usualtime)// once in two seconds a value
+           ,min_delay=Stats.Delay(delay)
+           ,max_delay=Stats.Delay(delay)
+           ,avg_delay=Stats.Delay(delay)
+           ,avgtime_delay=Stats.Delay(delay)
+           ,tmin_delay=Stats.Delay(delay)
+           ,tmax_delay=Stats.Delay(delay)
+           ,wavg_delay=Stats.DelayIndex(timedelay,usualtime)
            
-         return o;
+           var prev=false;
+
+            function stats(n,t)
+            {
+             var o={}
+             
+             o.min=min(n)
+             o.max=max(n)
+             o.avg=avg(n)
+             
+             o.tmin=tmin(n)
+             o.tmax=tmax(n)
+             o.wavg=wavg(n,t)
+             
+             if(prev===false) var prev=t-usualtime
+             var delta=t-prev;
+             o.avgtime=avgtime(delta)
+             
+             o.min_delay=min_delay(o.min)
+             o.max_delay=max_delay(o.max)
+             o.avg_delay=avg_delay(o.avg)
+             o.avgtime_delay=avgtime_delay(o.avgtime)
+
+             o.tmin_delay=tmin_delay(o.tmin)
+             o.tmax_delay=tmax_delay(o.tmax)
+             o.wavg_delay=wavg_delay(o.wavg)
+               
+             return o;
+            }
+            stats.reset=function()
+            {
+             min.reset();
+             max.reset();
+             avg.reset();
+             avgtime.reset();
+             tmin.reset();
+             tmax.reset();
+             wavg.reset();
+             min_delay.reset();
+             max_delay.reset();
+             avg_delay.reset();
+             avgtime_delay.reset();
+             tmin_delay.reset();
+             tmax_delay.reset();
+             wavg_delay.reset();
+            }
+            return stats;
         }
-        stats.reset=function()
-        {
-         min.reset();
-         max.reset();
-         avg.reset();
-         avgtime.reset();
-         tmin.reset();
-         tmax.reset();
-         wavg.reset();
-         min_delay.reset();
-         max_delay.reset();
-         avg_delay.reset();
-         avgtime_delay.reset();
-         tmin_delay.reset();
-         tmax_delay.reset();
-         wavg_delay.reset();
-        }
-        return stats;
-    }
 
  
  
 ### simple code
 
-    var Stats=require('efficient-rolling-stats');
-    
-    var stats=Stats.AllStats(101,50,15*60000,0.25*60000,7.5*60000)
-    stats(Math.random()*100,new Date().getTime())
+        var Stats=require('efficient-rolling-stats');
+        
+        var stats=Stats.AllStats(101,50,15*60000,0.25*60000,7.5*60000)
+        stats(Math.random()*100,new Date().getTime())
 
-    simple examples:
-     
-    min=Stats.RollingMin(4);// use generator configure window size to be 4
+        simple examples:
+         
+        min=Stats.RollingMin(4);// use generator configure window size to be 4
 
-    > min(3)
-    3
-    > min(3)
-    3
-    > min(3)
-    3
-    > min(2)
-    2
-    > min(4)
-    2
-    > min(4)
-    2
-    > min(4)
-    2
-    > min(4)
-    4
-    >
-     
-    max=Stats.RollingMax(4);// use generator
-     max(1)
-    1
-    > max(1)
-    1
-    > max(3)
-    3
-    > max(2)
-    3
-    > max(2)
-    3
-    > max(2)
-    3
-    > max(2)
-    2
-    >
-     
-    mint=Stats.RollingMinIndex(4000);// min values of last 4 seconds
-    > mint(3,new Date().getTime()+   0);
-    3
-    > mint(4,new Date().getTime()+1000);
-    3
-    > mint(3,new Date().getTime()+2000);
-    3
-    > mint(5,new Date().getTime()+5000);
-    3
-    > mint(6,new Date().getTime()+10000);
-    5
-    > mint(7,new Date().getTime()+20000);
-    6
-    > mint(8,new Date().getTime()+30000);
-    7
-     
-     
-    var stats=Stats.AllStats(101,50,15*60000,0.25*60000,7.5*60000)
-    stats(Math.random()*100,new Date().getTime())
+        > min(3)
+        3
+        > min(3)
+        3
+        > min(3)
+        3
+        > min(2)
+        2
+        > min(4)
+        2
+        > min(4)
+        2
+        > min(4)
+        2
+        > min(4)
+        4
+        >
+         
+        max=Stats.RollingMax(4);// use generator
+         max(1)
+        1
+        > max(1)
+        1
+        > max(3)
+        3
+        > max(2)
+        3
+        > max(2)
+        3
+        > max(2)
+        3
+        > max(2)
+        2
+        >
+         
+        mint=Stats.RollingMinIndex(4000);// min values of last 4 seconds
+        > mint(3,new Date().getTime()+   0);
+        3
+        > mint(4,new Date().getTime()+1000);
+        3
+        > mint(3,new Date().getTime()+2000);
+        3
+        > mint(5,new Date().getTime()+5000);
+        3
+        > mint(6,new Date().getTime()+10000);
+        5
+        > mint(7,new Date().getTime()+20000);
+        6
+        > mint(8,new Date().getTime()+30000);
+        7
+         
+         
+        var stats=Stats.AllStats(101,50,15*60000,0.25*60000,7.5*60000)
+        stats(Math.random()*100,new Date().getTime())
 
-    simple examples:
+        simple examples:
+         
+        min=Stats.RollingMin(4);// use generator
+         
+        > min(3)
+        3
+        > min(3)
+        3
+        > min(3)
+        3
+        > min(2)
+        2
+        > min(4)
+        2
+        > min(4)
+        2
+        > min(4)
+        2
+        > min(4)
+        4
+        >
+         
+        max=Stats.RollingMax(4);// use generator
+         max(1)
+        1
+        > max(1)
+        1
+        > max(3)
+        3
+        > max(2)
+        3
+        > max(2)
+        3
+        > max(2)
+        3
+        > max(2)
+        2
+        >
+         
+        mint=Stats.RollingMinIndex(4000);// min values of last 4 seconds
+        > mint(3,new Date().getTime()+   0);
+        3
+        > mint(4,new Date().getTime()+1000);
+        3
+        > mint(3,new Date().getTime()+2000);
+        3
+        > mint(5,new Date().getTime()+5000);
+        3
+        > mint(6,new Date().getTime()+10000);
+        5
+        > mint(7,new Date().getTime()+20000);
+        6
+        > mint(8,new Date().getTime()+30000);
+        7
      
-    min=Stats.RollingMin(4);// use generator
-     
-    > min(3)
-    3
-    > min(3)
-    3
-    > min(3)
-    3
-    > min(2)
-    2
-    > min(4)
-    2
-    > min(4)
-    2
-    > min(4)
-    2
-    > min(4)
-    4
-    >
-     
-    max=Stats.RollingMax(4);// use generator
-     max(1)
-    1
-    > max(1)
-    1
-    > max(3)
-    3
-    > max(2)
-    3
-    > max(2)
-    3
-    > max(2)
-    3
-    > max(2)
-    2
-    >
-     
-    mint=Stats.RollingMinIndex(4000);// min values of last 4 seconds
-    > mint(3,new Date().getTime()+   0);
-    3
-    > mint(4,new Date().getTime()+1000);
-    3
-    > mint(3,new Date().getTime()+2000);
-    3
-    > mint(5,new Date().getTime()+5000);
-    3
-    > mint(6,new Date().getTime()+10000);
-    5
-    > mint(7,new Date().getTime()+20000);
-    6
-    > mint(8,new Date().getTime()+30000);
-    7
- 
