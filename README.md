@@ -93,7 +93,7 @@ rolling/running statistics in javascript
 
     .
  
-
+```
     var Stats=require('efficient-rolling-stats');
     function SimpleStats(size,delay)
     {
@@ -126,6 +126,7 @@ rolling/running statistics in javascript
        }
        return stats;
     }
+````
 
 #### SimpleStatsNoDelay(WindowSize)
 
