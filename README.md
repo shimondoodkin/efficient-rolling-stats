@@ -94,7 +94,7 @@ rolling/running statistics in javascript
 
 #### SimpleStats(WindowSize,Delay)
  
- this is a simple example function of how to combine multiple stats together with delays
+ this is a simple example function of how to combine multiple stats together
  
  returns `stats(number){ return result_object }` 
  
@@ -139,7 +139,7 @@ function source:
 
 #### SimpleStatsNoDelay(WindowSize)
 
- anoher simple example function combines multiple stats together without delays
+ anoher simple example function combines multiple stats together without value delay
 
  returns ```stats(number){ return result_object }```
 
@@ -211,7 +211,7 @@ function source:
 		 o.min=min(n)
 		 o.max=max(n)
 		 o.avg=avg(n)
-		 
+
 		 o.stdev=Math.sqrt(stdev(Math.pow(n-o.avg,2)))
 		 o.z=o.stdev==0?0:(n-o.avg)/o.stdev
 		 o.zavg=zavg(o.z)

@@ -350,10 +350,8 @@ function SimpleStats(size,delay)
     var min=RollingMin(size)
    ,max=RollingMax(size)
    ,avg=RollingAvg(size)
-   ,min_delay=Delay(delay)
-   ,max_delay=Delay(delay)
-   ,avg_delay=Delay(delay)
-
+   ,value_delay=Delay(delay)
+   
     function stats(n)
     {
      var o={}
@@ -362,9 +360,7 @@ function SimpleStats(size,delay)
      o.max=max(n)
      o.avg=avg(n)
      
-     o.min_delay=min_delay(o.min)
-     o.max_delay=max_delay(o.max)
-     o.avg_delay=avg_delay(o.avg)
+     o.value_delay=value_delay(n)
        
      return o;
     }
@@ -374,9 +370,7 @@ function SimpleStats(size,delay)
      min.reset();
      max.reset();
      avg.reset();
-     min_delay.reset();
-     max_delay.reset();
-     avg_delay.reset();
+     value_delay.reset();
     }
     return stats;
 }
