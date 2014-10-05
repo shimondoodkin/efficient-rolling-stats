@@ -103,15 +103,18 @@ rolling/running statistics in javascript
        ,min_delay=Stats.Delay(delay)
        ,max_delay=Stats.Delay(delay)
        ,avg_delay=Stats.Delay(delay)
+       
        function stats(n)
        {
          var o={}
          o.min=min(n)
          o.max=max(n)
          o.avg=avg(n)
+         
          o.min_delay=min_delay(o.min)
          o.max_delay=max_delay(o.max)
          o.avg_delay=avg_delay(o.avg)
+         
          return o;
        }
        
@@ -120,6 +123,7 @@ rolling/running statistics in javascript
          min.reset();
          max.reset();
          avg.reset();
+         
          min_delay.reset();
          max_delay.reset();
          avg_delay.reset();
