@@ -1,0 +1,31 @@
+{
+  "name": "efficient-rolling-stats",
+  "version": "0.0.0",
+  "description": "efficient rolling stats added one by one with no recalculation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/shimondoodkin/efficient-rolling-stats.git"
+  },
+  "author": "Shimon Doodkin <helpmepro1@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shimondoodkin/efficient-rolling-stats/issues"
+  },
+  "homepage": "https://github.com/shimondoodkin/efficient-rolling-stats",
+  "keywords": [
+    "stats",
+    "avg",
+    "minimum",
+    "maximum",
+    "max",
+    "min",
+    "average",
+    "rolling",
+    "maxima",
+    "minima"
+  ]
+}
