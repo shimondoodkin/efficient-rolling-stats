@@ -88,10 +88,8 @@ rolling/running statistics in javascript
 
  returns ```stats(number){ return result_object }```
  
- ```stats``` has  ```stats.reset()```
- 
-
-
+ ```stats``` has 
+ * ```stats.reset()```
 
         var Stats=require('efficient-rolling-stats');
         function SimpleStats(size,delay)
