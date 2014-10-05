@@ -1,6 +1,6 @@
 {
   "name": "efficient-rolling-stats",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "efficient rolling stats added one by one with no recalculation",
   "main": "index.js",
   "scripts": {
