@@ -82,10 +82,10 @@ rolling/running statistics in javascript
 ### Example functions in Code
 
 #### SimpleStats(WindowSize,Delay)
-
+ 
  this is a simple example function of how to combine multiple stats together with delays
  denerally you should write such function for your self to choose which stats you want
-
+ 
  returns `stats(number){ return result_object }` 
  
  `stats` has 
