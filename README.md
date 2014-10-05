@@ -95,38 +95,34 @@ rolling/running statistics in javascript
     var Stats=require('efficient-rolling-stats');
     function SimpleStats(size,delay)
     {
-        var min=Stats.RollingMin(size)
+       var min=Stats.RollingMin(size)
        ,max=Stats.RollingMax(size)
        ,avg=Stats.RollingAvg(size)
        ,min_delay=Stats.Delay(delay)
        ,max_delay=Stats.Delay(delay)
        ,avg_delay=Stats.Delay(delay)
-        
-        function stats(n)
-        {
+       function stats(n)
+       {
          var o={}
-         
          o.min=min(n)
          o.max=max(n)
          o.avg=avg(n)
-         
          o.min_delay=min_delay(o.min)
          o.max_delay=max_delay(o.max)
          o.avg_delay=avg_delay(o.avg)
-           
          return o;
-        }
-        
-        stats.reset=function()
-        {
+       }
+       
+       stats.reset=function()
+       {
          min.reset();
          max.reset();
          avg.reset();
          min_delay.reset();
          max_delay.reset();
          avg_delay.reset();
-        }
-        return stats;
+       }
+       return stats;
     }
 
 #### SimpleStatsNoDelay(WindowSize)
