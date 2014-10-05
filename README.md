@@ -100,7 +100,7 @@ rolling/running statistics in javascript
 	   ,min_delay=Stats.Delay(delay)
 	   ,max_delay=Stats.Delay(delay)
 	   ,avg_delay=Stats.Delay(delay)
-
+        
 		function stats(n)
 		{
 		 var o={}
@@ -142,7 +142,7 @@ rolling/running statistics in javascript
            ,max=Stats.RollingMax(size)
            ,avg=Stats.RollingAvg(size)
          
-
+         
             function stats(n)
             {
              var o={}
@@ -150,7 +150,7 @@ rolling/running statistics in javascript
              o.min=min(n)
              o.max=max(n)
              o.avg=avg(n)
-
+            
              return o;
             }
             stats.reset=function()
@@ -188,7 +188,7 @@ rolling/running statistics in javascript
            ,wavg_delay=Stats.DelayIndex(timedelay,usualtime)
            
            var prev=false;
-
+            
             function stats(n,t)
             {
              var o={}
@@ -209,7 +209,7 @@ rolling/running statistics in javascript
              o.max_delay=max_delay(o.max)
              o.avg_delay=avg_delay(o.avg)
              o.avgtime_delay=avgtime_delay(o.avgtime)
-
+             
              o.tmin_delay=tmin_delay(o.tmin)
              o.tmax_delay=tmax_delay(o.tmax)
              o.wavg_delay=wavg_delay(o.wavg)
@@ -236,19 +236,19 @@ rolling/running statistics in javascript
             return stats;
         }
 
- 
- 
+
+
 ### simple code
 
         var Stats=require('efficient-rolling-stats');
         
         var stats=Stats.AllStats(101,50,15*60000,0.25*60000,7.5*60000)
         stats(Math.random()*100,new Date().getTime())
-
+        
         simple examples:
          
         min=Stats.RollingMin(4);// use generator configure window size to be 4
-
+        
         > min(3)
         3
         > min(3)
@@ -303,7 +303,7 @@ rolling/running statistics in javascript
          
         var stats=Stats.AllStats(101,50,15*60000,0.25*60000,7.5*60000)
         stats(Math.random()*100,new Date().getTime())
-
+        
         simple examples:
          
         min=Stats.RollingMin(4);// use generator
