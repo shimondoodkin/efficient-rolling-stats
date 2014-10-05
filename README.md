@@ -12,8 +12,8 @@ rolling/running statistics in javascript
  
  atEveryStep usualy has:
  
- * ```atEveryStep.setWindowSize(WindowSize)``
- * ```atEveryStep.reset()``
+ * ```atEveryStep.setWindowSize(WindowSize)```
+ * ```atEveryStep.reset()```
  
 
 ===RollingMax(WindowSize)===
@@ -58,7 +58,7 @@ rolling/running statistics in javascript
  
  also atEveryStep has:
  
- * ```atEveryStep.setUsualIndexSkipBetweenOccations(UsualIndexSkipBetweenOccations)``
+ * ```atEveryStep.setUsualIndexSkipBetweenOccations(UsualIndexSkipBetweenOccations)```
 
 ===Delay(WindowSize)===
 
@@ -78,7 +78,7 @@ rolling/running statistics in javascript
  
  also atEveryStep has:
  
- * ```atEveryStep.setUsualIndexSkipBetweenOccations(UsualIndexSkipBetweenOccations)``
+ * ```atEveryStep.setUsualIndexSkipBetweenOccations(UsualIndexSkipBetweenOccations)```
 
 ====Examples====
 
@@ -90,7 +90,7 @@ rolling/running statistics in javascript
  returns ```stats(number){ return result }```
  
  ```stats``` has 
-  * ```stats.reset()``
+  * ```stats.reset()```
   
 ===SimpleStatsNoDelay(WindowSize)===
 
