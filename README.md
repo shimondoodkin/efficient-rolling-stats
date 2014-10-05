@@ -83,13 +83,14 @@ rolling/running statistics in javascript
 
 #### SimpleStats(WindowSize,Delay)
 
-  this is a simple example function of how to combine multiple stats together with delays
-  denerally you should write such function for your self to choose which stats you want
+ this is a simple example function of how to combine multiple stats together with delays
+ denerally you should write such function for your self to choose which stats you want
 
  returns ```stats(number){ return result_object }```
  
  ```stats``` has 
   * ```stats.reset()```
+
   
     var Stats=require('efficient-rolling-stats');
     function SimpleStats(size,delay)
@@ -130,10 +131,11 @@ rolling/running statistics in javascript
   
 #### SimpleStatsNoDelay(WindowSize)
 
-  anoher simple example function combines multiple stats together without delays
+ anoher simple example function combines multiple stats together without delays
 
  returns ```stats(number){ return result_object }```
- 
+
+
     var Stats=require('efficient-rolling-stats');
     function SimpleStatsNoDelay(size)
     {
@@ -163,10 +165,10 @@ rolling/running statistics in javascript
 
 #### AllStats(WindowSize,Delay,TimeWindowSize,UsualTimeSkip,TimeDelay)
 
-  this example compains many possibilities
+ this example compains many possibilities
 
  returns ```stats(number,index){ return result_object }```
- 
+
 
     var Stats=require('efficient-rolling-stats');
     function AllStats(size,delay,timesize,usualtime,timedelay)
