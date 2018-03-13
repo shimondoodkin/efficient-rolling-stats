@@ -18,6 +18,7 @@ if(avg1(1)!=1) console.log(new Error('RollingAvg error').stack);
 else if(avg1(2)!=1.5) console.log(new Error('RollingAvg error').stack);
 else  console.log('RollingAvg ok');
 
+/*
 var median1=Stats.RollingMedian(3);
 if(median1(1)!=1) console.log(new Error('RollingMedian error').stack);
 else if(median1(2)!=1.5) console.log(new Error('RollingMedian error').stack);
@@ -28,7 +29,7 @@ else  console.log('RollingMedian ok');
 
 console.log('');
 
-
+*/
 
 var min1=Stats.RollingMinIndex(2);
 if(min1(2,1)!=2) console.log(new Error('RollingMinIndex error').stack);
@@ -48,13 +49,14 @@ if(avg1(1,1)!=1) console.log(new Error('RollingAvgIndex error').stack);
 else if(avg1(2,2)!=1.5) console.log(new Error('RollingAvgIndex error').stack);
 else  console.log('RollingAvgIndex ok');
 
-
+/*
 var median1=Stats.RollingMedianIndex(3); 
 if(median1(1,1)!=1) console.log(new Error('RollingMedianIndex error').stack);
 else if(median1(2,2)!=1.5) console.log(new Error('RollingMedianIndex error').stack);
 else if(median1(3,3)!=2) console.log(new Error('RollingMedianIndex error').stack);
 else if(median1(4,4)!=3) console.log(new Error('RollingMedianIndex error').stack);
 else  console.log('RollingMedianIndex ok');
+*/
 
 var sumper1=Stats.RollingSumPerIndex(2,1);
 if(sumper1(1,1)!=1) console.log(new Error('RollingSumPerIndex error').stack);
@@ -80,7 +82,7 @@ else if(delay1(3,3)!=1) console.log(new Error('DelayIndex error').stack);
 else if(delay1(4,4)!=2) console.log(new Error('DelayIndex error').stack);
 else  console.log('DelayIndex ok');
 
-
+/*
 var smooth=Stats.smooth6(3,3,3,3,3,3);
 
 
@@ -107,6 +109,7 @@ console.log(smooth(-10,20));
 console.log(smooth(-11,21));
 console.log(smooth(-12,22));
 console.log(smooth(-13,23));
+*/
 
 /*
 exports.AllStats=AllStats;

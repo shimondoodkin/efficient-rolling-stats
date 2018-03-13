@@ -219,12 +219,13 @@ function Delay(WindowSize,UndefinedValue)
     var DequeValue=[],T=WindowSize,U=UndefinedValue;
     function atEveryStepDo(CurrentValue)
     {
-      DequeValue.push(CurrentValue); 
+      var ret=U;
       if( DequeValue.length== T ) 
       {
-        return  DequeValue.shift();
+          ret=DequeValue.shift();
       }
-      return U;
+      DequeValue.push(CurrentValue); 
+      return ret;
     }
     atEveryStepDo.setWindowSize=function(WindowSize){T=WindowSize};
     atEveryStepDo.setUndefinedValue=function(WindowSize){U=UndefinedValue};
@@ -240,11 +241,16 @@ function DelayIndex(WindowSize,UsualIndexSkipBetweenOccations,UndefinedValue)// 
       DequeIndex.push(CurrentIndex); 
       DequeValue.push(CurrentValue); 
       if(PrevIndex===false)PrevIndex=CurrentIndex-U;
-
-      while ( DequeIndex.length!==0 && (DequeIndex[0] <= CurrentIndex - T) )  
+      //take first to fall off and throw away the rest
+      if ( DequeIndex.length!==0 && (DequeIndex[0] <= CurrentIndex - T) )  
       {
          PrevIndex=DequeIndex.shift();
          PrevValue=DequeValue.shift();
+         while ( DequeIndex.length!==0 && (DequeIndex[0] <= CurrentIndex - T) )  
+         {
+           DequeIndex.shift();
+           DequeValue.shift();
+         }
       }
       return PrevValue;
     }
