@@ -1,6 +1,6 @@
 {
   "name": "efficient-rolling-stats",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "efficient rolling stats added one by one with no recalculation",
   "main": "index.js",
   "scripts": {
@@ -27,5 +27,8 @@
     "rolling",
     "maxima",
     "minima"
-  ]
+  ],
+  "dependencies": {
+    "package.json": "^2.0.1"
+  }
 }
