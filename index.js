@@ -801,55 +801,115 @@ function PositiveLatelyIndex(WindowSize)// generator, expects some high frequenc
 }
 
 
-// choosing RoundingDevisor, if RoundingDevisor=30 than 10= 0.1,0.2,0.3 (can be 100 for 0.01, 1000 for 0.001)  * 3 sub divitions of each 0.1  so it would be 0.1 0.133 0.163 0.2
-function RollingHistogram(WindowSize,RoundingDevisor)// generator
+// choosing PreRoundingMultiplier, if PreRoundingMultiplier=30 than bins will be like = 0.1,0.2,0.3 .  can be 100 for 0.01 bins,  can be  1000 for 0.001 bins
+//
+
+// this histogram do not remove anything just accamulates all, until you do hist.reset()
+function Histogram(PreRoundingMultiplier)// generator
 {
-    var DequeValue=[],T=WindowSize,RD=RoundingDevisor,hist={};
-    function atEveryStepDo(CurrentValue)
+    var RD=PreRoundingMultiplier,hist= new Map();;
+    function atEveryStepDo(CurrentPosition,CurrentAmount=1)
     {
-      if ( DequeValue.length >= T ) 
-      {
-         var k=DequeValue.shift();
-		 hist[k]--; 
-		 if(hist[k]==0)delete hist[k];
-      }
       //Head is too old, it is leaving the window
- 
-	  var CurrentValueRound=Math.round(CurrentValue*RD)/RD;
-	  var k=deltad_self_round.toFixed(14);
-	  DequeValue.push(k);
-	  if(k in hist) hist[k]++;  else hist[k]=1;
+	  
+	  var CurrentPositionRound=parseFloat((  Math.round( CurrentPosition*RD )/RD  ).toFixed(12));
+	  	  
+	  if(hist.has(CurrentPositionRound))
+	    hist.set( CurrentPositionRound, parseFloat((  hist.get(CurrentPositionRound)+CurrentAmount  ).toFixed(12)) ); 
+	  else
+	    hist.set( CurrentPositionRound, CurrentAmount );
 	  
       return hist 
     }
-    atEveryStepDo.setWindowSize=function(WindowSize){T=WindowSize};
-    atEveryStepDo.reset=function(){Sum=0;DequeValue.splice(0,DequeValue.length);};
+	atEveryStepDo.hist=hist;
+    atEveryStepDo.reset=function(){ hist.clear() };
     return atEveryStepDo;
 }
 
-function RollingHistogramIndex(WindowSize,RoundingDevisor)// generator
+function RollingHistogram(WindowSize,PreRoundingMultiplier)// generator
 {
-    var DequeIndex=[],DequeValue=[],T=WindowSize,RD=RoundingDevisor,hist={};
-    function atEveryStepDo(CurrentValue,CurrentIndex)
+    var DequePosition=[],DequeAmount=[],T=WindowSize,RD=PreRoundingMultiplier,hist= new Map();;
+    function atEveryStepDo(CurrentPosition,CurrentAmount=1)
     {
+      if ( DequePosition.length >= T ) 
+      {
+        var prevpos=DequePosition.shift();
+        var prevamount=DequeAmount.shift();
+		
+		var newamount=parseFloat((   hist.get(prevpos)-prevamount   ).toFixed(12));
+        if(newamount!==0)
+			hist.set(prevpos , newamount); 
+		else
+			hist.delete(prevpos);
+      }
+      //Head is too old, it is leaving the window
+	  
+	  var CurrentPositionRound=parseFloat((  Math.round( CurrentPosition*RD )/RD  ).toFixed(12));
+	  
+	  DequePosition.push(CurrentPositionRound);
+	  DequeAmount.push(CurrentAmount);
+	  
+	  if(hist.has(CurrentPositionRound))
+	    hist.set( CurrentPositionRound, parseFloat((  hist.get(CurrentPositionRound)+CurrentAmount  ).toFixed(12)) ); 
+	  else
+	    hist.set( CurrentPositionRound, CurrentAmount );
+	  
+      return hist 
+    }
+	atEveryStepDo.hist=hist;
+    atEveryStepDo.setWindowSize=function(WindowSize){T=WindowSize};
+    atEveryStepDo.reset=function(){Sum=0;DequePosition.splice(0,DequePosition.length);};
+    return atEveryStepDo;
+}
+
+function RollingHistogramIndex(WindowSize,PreRoundingMultiplier)// generator
+{
+    var DequeIndex=[],DequePosition=[],DequeAmount=[],T=WindowSize,RD=PreRoundingMultiplier,hist= new Map();
+    function atEveryStepDo(CurrentPosition,CurrentIndex,CurrentAmount=1)
+    {
+	  if( (!CurrentAmount&&CurrentAmount!==0) || (!CurrentPosition&&CurrentPosition!==0) ) return hist;
       while ( DequeIndex.length!==0 && (DequeIndex[0] <= CurrentIndex - T) )
       {
-         var k=DequeValue.shift();
-		 hist[k]--; 
-		 if(hist[k]==0)delete hist[k];
+            DequeIndex.shift();
+        var prevpos=DequePosition.shift();
+        var prevamount=DequeAmount.shift();
+		
+		if(!prevpos && prevpos!==0)console.log('nana1',{prevamount,prevpos})
+		if(!prevamount && prevamount!==0)console.log('nana2',{prevamount,prevpos})
+			
+		if(hist.has(prevpos))
+		{
+			var newamount=parseFloat((   (hist.get(prevpos))-prevamount   ).toFixed(12));
+			if(!newamount && newamount!==0)console.log('nana3',{newamount,	prevamount,prevpos})
+
+			if(newamount!==0)
+				hist.set(prevpos , newamount); 
+			else
+				hist.delete(prevpos);
+		}
       }
       
       //Head is too old, it is leaving the window
       
-      var CurrentValueRound=Math.round(CurrentValue*RD)/RD;
-	  var k=deltad_self_round.toFixed(14);
-	  DequeValue.push(k);
-	  if(k in hist) hist[k]++;  else hist[k]=1;
+	  var CurrentPositionRound=parseFloat((  Math.round( CurrentPosition*RD )/RD  ).toFixed(12));
+	  
+	  DequePosition.push(CurrentPositionRound);
+	  DequeAmount.push(CurrentAmount);
+	  DequeIndex.push(CurrentIndex);
+	  
+	  if(hist.has(CurrentPositionRound))
+	  {
+		let newamount=parseFloat((  hist.get(CurrentPositionRound)+CurrentAmount  ).toFixed(12))
+	    hist.set( CurrentPositionRound, newamount   ); 
+	  }
+	  else
+	    hist.set( CurrentPositionRound, CurrentAmount );
 	  
       return hist 
     }
+	atEveryStepDo.hist=hist;
     atEveryStepDo.setWindowSize=function(WindowSize){T=WindowSize};
-    atEveryStepDo.reset=function(){DequeIndex.splice(0,DequeIndex.length);DequeValue.splice(0,DequeValue.length);Sum=0;};
+    atEveryStepDo.reset=function(){DequeIndex.splice(0,DequeIndex.length);DequePosition.splice(0,DequePosition.length);Sum=0;};
     return atEveryStepDo;
 }
 
@@ -1035,6 +1095,7 @@ exports.SimpleStatsNoDelay=SimpleStatsNoDelay;
 exports.PositiveLately=PositiveLately;
 exports.PositiveLatelyIndex=PositiveLatelyIndex;
  
+exports.Histogram=Histogram;
 exports.RollingHistogram=RollingHistogram;
 exports.RollingHistogramIndex=RollingHistogramIndex;
 exports.HideFirst=HideFirst;
