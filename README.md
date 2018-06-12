@@ -69,7 +69,7 @@ rolling/running statistics in javascript
  
 ```javascript
 var avg=stats.RollingSumPerIndex(
-                                  10, // like periods, - avarage data during 10 periods
+                                  10, // like periods, - do avarage of the data during 10 periods
 				  1) //  generally i will feed the data every 1 period,
 				     //   if index of all data in the buffer is same then use this number to divide.
 				     //  to prevent divition by zero.
