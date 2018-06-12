@@ -62,7 +62,23 @@ rolling/running statistics in javascript
  
  returns `function atEveryStep(number,index){ return result }`
  
- the index argument can be not continious like time in seconds or miliseconds
+ the index argument is a always rising number, can be float or integer, can be with skipps. like time in seconds or miliseconds.
+ 
+ example:
+ count number of hits per second avarage during 10 seconds
+ 
+```javascript
+var avg=stats.RollingSumPerIndex(
+                                  10, // like periods, - avarage data during 10 periods
+				  1) //  generally i will feed the data every 1 period,
+				     //   if index of all data in the buffer is same then use this number to divide.
+				     //  to prevent divition by zero.
+    avg(
+    1, // the value is 1
+    Date.now()/1000 // period is 1 second 
+    )
+
+```
  
  also atEveryStep has:
  
