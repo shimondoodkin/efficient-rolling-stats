@@ -48,7 +48,7 @@ rolling/running statistics in javascript
 
 #### RollingSumPerIndex(WindowSize,UsualIndexSkipBetweenOccations)
 
- this function is calculates average rate: Sum/(LastIndex-FirstIndex)
+ this function is calculates average rate: SumDuringWindow/(LastIndex-FirstIndex)
  like in stocks total volume per minute in the last minute
  
  if index is in miliseconds and you average frame size than it calculates rolling frames per millisecond
@@ -62,8 +62,12 @@ rolling/running statistics in javascript
  
  returns `function atEveryStep(number,index){ return result }`
  
- the index argument is a always rising number, can be float or integer, can be with skipps. like time in seconds or miliseconds.
+ the index argument is a always rising number, can be float or integer, can be with skips. like time in seconds or miliseconds.
  
+ also atEveryStep has:
+ 
+ * `atEveryStep.setUsualIndexSkipBetweenOccations(UsualIndexSkipBetweenOccations)`
+
  example:
  count number of hits per second avarage during 10 seconds
  
@@ -73,17 +77,13 @@ var avg=stats.RollingSumPerIndex(
 				  1) //  generally i will feed the data every 1 period,
 				     //   if index of all data in the buffer is same then use this number to divide.
 				     //  to prevent divition by zero.
-    avg(
-    1, // the value is 1
-    Date.now()/1000 // period is 1 second 
+var rate= avg(
+    1, // the value is 1 to sum each time
+    Date.now()/1000 // period is in 1 second terms,
+                    // so the sum will be divided by difference between end index from start index in seconds
     )
 
 ```
- 
- also atEveryStep has:
- 
- * `atEveryStep.setUsualIndexSkipBetweenOccations(UsualIndexSkipBetweenOccations)`
-
 #### Delay(WindowSize)
 
  this function delayes the input by window size
