@@ -194,6 +194,57 @@ function RollingAvgIndex(WindowSize)// generator
 
 
 
+function RollingSum(WindowSize)// generator
+{
+    var DequeValue=[],T=WindowSize,Sum=0,prev;
+    function atEveryStepDo(CurrentValue)
+    {
+      if ( DequeValue.length >= T ) 
+      {
+         Sum-=DequeValue.shift();
+      }
+      //Head is too old, it is leaving the window
+      if(CurrentValue||CurrentValue===0) //don't break the sum on junk
+      {
+      DequeValue.push(CurrentValue); 
+      Sum+=CurrentValue;
+      }
+	  else return prev;
+      return prev=Sum; //Head value is maximum in the current window
+    }
+    atEveryStepDo.setWindowSize=function(WindowSize){T=WindowSize};
+    atEveryStepDo.reset=function(){Sum=0;DequeValue.splice(0,DequeValue.length);};
+    return atEveryStepDo;
+}
+
+function RollingSumIndex(WindowSize)// generator
+{
+    var DequeIndex=[],DequeValue=[],T=WindowSize,Sum=0;
+    function atEveryStepDo(CurrentValue,CurrentIndex)
+    {
+      while ( DequeIndex.length!==0 && (DequeIndex[0] <= CurrentIndex - T) )
+      {
+         DequeIndex.shift();
+         Sum-=DequeValue.shift();
+      }
+      
+      //Head is too old, it is leaving the window
+      if(CurrentValue||CurrentValue===0)
+	  {
+      DequeIndex.push(CurrentIndex); 
+      DequeValue.push(CurrentValue); 
+
+      Sum+=CurrentValue;
+	  }
+  	  else return prev;
+      return prev=Sum; //Head value is maximum in the current window
+
+    }
+    atEveryStepDo.setWindowSize=function(WindowSize){T=WindowSize};
+    atEveryStepDo.reset=function(){DequeIndex.splice(0,DequeIndex.length);DequeValue.splice(0,DequeValue.length);Sum=0;};
+    return atEveryStepDo;
+}
+
 //simple binary sorted array
 //add item: array.splice(sortedIndex(array, value),0,value);
 //remove item: var x=sortedIndex(array, value); if(array[x]==value)array.splice(x,1);
@@ -1082,6 +1133,9 @@ exports.RollingMedian=RollingMedian;
 exports.RollingMinIndex=RollingMinIndex;
 exports.RollingMaxIndex=RollingMaxIndex;
 exports.RollingAvgIndex=RollingAvgIndex;
+exports.RollingSum=RollingSum;
+exports.RollingSumIndex=RollingSumIndex;
+ 
 exports.RollingMedianIndex=RollingMedianIndex;
 exports.RollingSumPerIndex=RollingSumPerIndex;
 
